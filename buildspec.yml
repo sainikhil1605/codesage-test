@@ -4,7 +4,8 @@ phases:
   install:
     commands:
       - echo "Installing AWS CLI"
-      - apt-get update && apt-get install -y awscli
+      - yum -y update
+      - yum -y install awscli
       - echo "Installing necessary tools..."
       - npm install
   build:
