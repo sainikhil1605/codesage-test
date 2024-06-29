@@ -1,22 +1,22 @@
+---
 version: 0.2
-
 phases:
   install:
     commands:
-      - echo Installing AWS CLI
-      - apt-get update && apt-get install -y awscli
-      - echo "Installing necessary tools..."
-      - npm install  # Or any other command to set up your environment
+      - npm install
   build:
     commands:
-      - echo "Extract PR number from trigger: $CODEBUILD_WEBHOOK_TRIGGER"
+      - echo "Extract PR number from trigger $CODEBUILD_WEBHOOK_TRIGGER"
       - PR_NUMBER=$(echo $CODEBUILD_WEBHOOK_TRIGGER | cut -d '/' -f2)
-      - echo "PR number extracted: $PR_NUMBER"
+      - echo "PR number extracted $PR_NUMBER"
       - echo "Packaging code for review..."
-      - zip -r packaged_code.zip . -x "node_modules/*"  # Excluding node_modules
+      - zip -r packaged_code.zip . -x "node_modules/*"
       - echo "Publishing message to SNS..."
       - >
-        aws sns publish --topic-arn "arn:aws:sns:region:account-id:YourTopicName" --message "{\"prNumber\": \"$PR_NUMBER\", \"bucket\": \"YourS3BucketName\", \"key\": \"YourS3KeyPath/packaged_code.zip\"}"
+        aws sns publish --topic-arn
+        "arn:aws:sns:region:account-id:PRNotificationTopic" --message "{\"prNumber\":
+        \"$PR_NUMBER\", \"bucket\": \"your-s3-bucket-name\", \"key\":
+        \"$PR_NUMBER/packaged_code.zip\"}"
 artifacts:
   files:
     - packaged_code.zip
