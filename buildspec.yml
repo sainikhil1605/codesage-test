@@ -16,7 +16,7 @@ phases:
       - zip -r packaged_code.zip . -x "node_modules/*"  # Excluding node_modules
       - echo "Publishing message to SNS..."
       - >
-        aws sns publish --topic-arn "arn:aws:sns:region:account-id:YourTopicName" --message "{\"prNumber\": \"$PR_NUMBER\", \"bucket\": \"YourS3BucketName\", \"key\": \"YourS3KeyPath/packaged_code.zip\"}"
+        aws sns publish --topic-arn "arn:aws:sns:region:account-id:PRNotificationTopic" --message "{\"prNumber\": \"$PR_NUMBER\", \"bucket\": \"codesage-codebuild-zips\", \"key\": \"$PR_NUMBER/packaged_code.zip\"}"
 artifacts:
   files:
     - packaged_code.zip
