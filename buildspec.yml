@@ -14,8 +14,8 @@ phases:
       - echo "Publishing message to SNS..."
       - >
         aws sns publish --topic-arn
-        "arn:aws:sns:region:account-id:PRNotificationTopic" --message "{\"prNumber\":
-        \"$PR_NUMBER\", \"bucket\": \"your-s3-bucket-name\", \"key\":
+        "arn:aws:sns:us-east-1:211125578123:PRNotificationTopic" --message "{\"prNumber\":
+        \"$PR_NUMBER\", \"bucket\": \"codepipeline-us-east-1-969052672079/codesage-pipeline/BuildArtif/\", \"key\":
         \"$PR_NUMBER/packaged_code.zip\"}"
 artifacts:
   files:
