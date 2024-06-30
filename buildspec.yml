@@ -5,11 +5,10 @@ phases:
       - npm install
   build:
     commands:
-      - echo "Printing all environment variables:"
-      - printenv
       - echo "Extract PR number from trigger $CODEBUILD_WEBHOOK_TRIGGER"
       - PR_NUMBER=$(echo $CODEBUILD_WEBHOOK_TRIGGER | awk -F'/' '{print $2}')
       - echo "Extracted PR number $PR_NUMBER"
+      - mkdir -p $PR_NUMBER
       - echo "Packaging code for review..."
       - zip -r $PR_NUMBER/packaged_code.zip . -x "node_modules/*"
       - echo "Publishing message to SNS..."
@@ -17,4 +16,4 @@ phases:
 artifacts:
   files:
     - $PR_NUMBER/packaged_code.zip
-  discard-paths: yes
+  discard-paths: no
