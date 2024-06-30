@@ -1,4 +1,3 @@
----
 version: 0.2
 phases:
   install:
@@ -6,17 +5,15 @@ phases:
       - npm install
   build:
     commands:
+      - echo "Printing all environment variables:"
+      - printenv
       - echo "Extract PR number from trigger $CODEBUILD_WEBHOOK_TRIGGER"
-      - PR_NUMBER=$(echo $CODEBUILD_WEBHOOK_TRIGGER | cut -d '/' -f2)
-      - echo "PR number extracted $PR_NUMBER"
+      - PR_NUMBER=$(echo $CODEBUILD_WEBHOOK_TRIGGER | awk -F'/' '{print $2}')
+      - echo "Extracted PR number $PR_NUMBER"
       - echo "Packaging code for review..."
       - zip -r packaged_code.zip . -x "node_modules/*"
       - echo "Publishing message to SNS..."
-      - >
-        aws sns publish --topic-arn
-        "arn:aws:sns:us-east-1:211125578123:PRNotificationTopic" --message "{\"prNumber\":
-        \"$PR_NUMBER\", \"bucket\": \"codepipeline-us-east-1-969052672079/codesage-pipeline/BuildArtif/\", \"key\":
-        \"$PR_NUMBER/packaged_code.zip\"}"
+      - aws sns publish --topic-arn "arn:aws:sns:us-east-1:211125578123:PRNotificationTopic" --message "{\"prNumber\":\"$PR_NUMBER\", \"bucket\":\"codepipeline-us-east-1-969052672079/codesage-pipeline/BuildArtif/\", \"key\":\"$PR_NUMBER/packaged_code.zip\"}"
 artifacts:
   files:
     - packaged_code.zip
